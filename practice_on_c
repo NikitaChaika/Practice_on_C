@@ -1,3 +1,4 @@
+/* Задание№1*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -5,34 +6,60 @@
 int main()
 {
     double a, b, c, D=0, x1, x2;
-    int x;
-    do {
+    int n;
+    while(n==0)
+    {
 
-    printf("Vvedite a: ");
-    scanf("%lf", &a);
-    printf("Vvedite b: ");
-    scanf("%lf", &b);
-    printf("Vvedite c: ");
-    scanf("%lf", &c);
+        printf("Vvedite a: ");
+        scanf("%lf", &a);
+        printf("Vvedite b: ");
+        scanf("%lf", &b);
+        printf("Vvedite c: ");
+        scanf("%lf", &c);
 
-    D = b*b - 4*a*c;
-    printf("D = %lf\n", D);
+        D = b*b - 4*a*c;
+        printf("D = %lf\n", D);
 
-    if (D>0) {
-        x1=(-b+sqrt(D))/(2*a);
-        x2=(-b-sqrt(D))/(2*a);
-    printf("x1=%lf\nx2=%lf\n", x1, x2);
-
+        if (D>0)
+        {
+            x1=(-b+sqrt(D))/(2*a);
+            x2=(-b-sqrt(D))/(2*a);
+            printf("x1=%lf\nx2=%lf\n", x1, x2);
+        }
+        if (D==0)
+        {
+            x1=(-b/(2*a));
+        }
+        if (D<0)
+        {
+            printf("kornei net");
+        }
+        printf("dly povtireniy raboti nagmite 0: ");
+        scanf("%d", &n);
     }
-    if (D==0) {
-        x1=(-b/(2*a));
-    }
-    if (D<0) {
-        printf("kornei net");
-    }
-    printf("dly povtireniy raboti nagmite 1: ");
-    scanf("%d", &x);
-    } while(x==1);
     return 0;
 }
 
+/*Задание№2*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+int main()
+{
+    double number, antinumber, mas[3][3];
+    int i,k;
+    for(i=0;i<3;i++)
+    for(k=0;k<3;k++)
+    {
+        printf(" element '%d', '%d' = ", i,k);
+        scanf("%lf",&mas[i][k] );
+
+    }
+    number = mas[0][0]+ mas[1][1]+ mas[2][2];
+        printf("summa elementov po glavnoi %lf\n", number);
+    antinumber = mas[0][2]+ mas[1][1]+ mas[2][0];
+        printf("summa elementov po pobochnoi %lf\n", antinumber);
+
+    return 0;
+}
