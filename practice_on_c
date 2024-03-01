@@ -47,8 +47,8 @@ int main()
 
 int main()
 {
-    double number, antinumber, mas[3][3];
-    int i,k;
+      double number, antinumber, mas[3][3];
+    int i,k,s,l,opred2,square[2][2];
     for(i=0;i<3;i++)
     for(k=0;k<3;k++)
     {
@@ -61,5 +61,75 @@ int main()
     antinumber = mas[0][2]+ mas[1][1]+ mas[2][0];
         printf("summa elementov po pobochnoi %lf\n", antinumber);
 
+    for(s=0;s<2;s++)
+    for(l=0;l<2;l++)
+    {
+        printf(" element '%d', '%d' = ", s,l);
+        scanf("%d",&square[s][l] );
+
+    }
+    opred2 = pow( square[0][0] * square[1][1] - square[0][1] * square[1][0], 2 );
+    printf("opredilitel v kvadrate = %d", opred2);
     return 0;
+
+}
+
+
+#ИГРА
+#include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
+int main()
+{
+    char mas[12][21];
+        int i;
+        int x=10, y=5;
+        char key;
+        int ox,oy;
+        int ax = 5 , ay = 3;
+        int score = 0;
+
+        srand(time(NULL));
+
+    do
+    {
+
+        sprintf(mas[0], "####################");
+        for(i = 1 ; i<9 ;i++ )
+            sprintf(mas[i], "#                  #");
+        sprintf(mas[9], "####################");
+        sprintf(mas[11], "score = %d", score);
+
+
+        mas[y][x] = '@';
+        mas[ay][ax] = '*';
+        system("cls");
+
+
+        for(i=0;i<12;i++)
+            printf("%s\n", mas[i]);
+        key = getch();
+        ox = x;
+        oy = y;
+        if(key == 'w') y--;
+        if(key == 's') y++;
+        if(key == 'a') x--;
+        if(key == 'd') x++;
+        if(mas[y][x]== '#')
+        {
+            x = ox;
+            y = oy;
+        }
+
+        if((x==ax)&&(y==ay))
+        {
+            score++;
+            ax = rand()*1.0/ RAND_MAX * 18 + 1;
+            ay = rand()*1.0/ RAND_MAX * 8 + 1;
+
+        }
+
+    }
+    while(key != 'e');
+
 }
