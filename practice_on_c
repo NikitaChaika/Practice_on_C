@@ -74,6 +74,36 @@ int main()
 
 }
 
+# 3 Задание
+#include <stdio.h>
+#include <stdlib.h>
+int main()
+{
+    char stroka[81];
+    int i;
+    printf("Vvedite stroky: ");
+    scanf("%80[^\n]", stroka);
+
+
+    for (i = 0; i<81; i++)
+        {
+        if (stroka[i] == 'a')
+            {
+            stroka[i] = 'A';
+            }
+    else if (stroka[i] == 'b')
+        {
+            stroka[i] = 'B';
+        }
+        }
+
+    printf("Poluchnay stroka: %s\n\n", stroka);
+
+    return 0;
+}
+
+
+
 
 #ИГРА
 #include <stdio.h>
