@@ -47,32 +47,43 @@ int main()
 
 int main()
 {
-      double number, antinumber, mas[3][3];
-    int i,k,s,l,opred2,square[2][2];
-    for(i=0;i<3;i++)
-    for(k=0;k<3;k++)
-    {
-        printf(" element '%d', '%d' = ", i,k);
-        scanf("%lf",&mas[i][k] );
+    int N;
+    printf("Vvedite razmernosti kvadratnoi maatrizi: ");
+    scanf("%d", &N);
+      double number, antinumber, mas[N][N], opred2[N][N];
+    int i,k;
+    for(i=0;i<N;i++){
+        for(k=0;k<N;k++)
+        {
+            printf(" element '%d', '%d' = ", i,k);
+            scanf("%lf",&mas[i][k] );
+            if(i==k){
+        number+= mas[i][i];
+        }
+
+        }
+        antinumber+= mas[i][N-i-1];
 
     }
-    number = mas[0][0]+ mas[1][1]+ mas[2][2];
-        printf("summa elementov po glavnoi %lf\n", number);
-    antinumber = mas[0][2]+ mas[1][1]+ mas[2][0];
-        printf("summa elementov po pobochnoi %lf\n", antinumber);
-
-    for(s=0;s<2;s++)
-    for(l=0;l<2;l++)
-    {
-        printf(" element '%d', '%d' = ", s,l);
-        scanf("%d",&square[s][l] );
-
+    for (i = 0; i < N; i++) {
+        for (k = 0; k < N; k++) {
+            printf("%lf\t", mas[i][k]);
+        }
+        printf("\n");
     }
-    opred2 = pow( square[0][0] * square[1][1] - square[0][1] * square[1][0], 2 );
-    printf("opredilitel v kvadrate = %d", opred2);
-    return 0;
-
-}
+        printf("\nsumma elementov po glavnoi %lf\n", number);
+        printf("summa elementov po pobochnoi %lf\n\n", antinumber);
+    for (i = 0; i < N; i++) {
+        for (k = 0; k < N; k++) {
+                int sum = 0;
+                for(int j = 0; j<N; j++){
+                    sum+=mas[i][j]*mas[j][k];
+                }
+                opred2[i][k]=sum;
+                printf("%lf\t", opred2[i][k]);
+        }
+        printf("\n");
+    }
 
 # 3 Задание
 #include <stdio.h>
