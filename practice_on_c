@@ -84,6 +84,10 @@ int main()
         }
         printf("\n");
     }
+    return 0;
+
+}
+
 
 # 3 Задание
 #include <stdio.h>
