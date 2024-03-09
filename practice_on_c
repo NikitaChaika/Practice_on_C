@@ -178,3 +178,51 @@ int main()
     while(key != 'e');
 
 }
+
+ЗАДАНИЕ №4
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+int proverca(int a ,int b, int c)
+{
+    return (a + b > c) && (a + c > b) && (b + c > a);
+}
+int triangleP(int a, int b, int c)
+{
+    return a+b+c;
+}
+float triangleSquare(int a, int b, int c)
+{
+    double p,square;
+    p = (a+b+c)/2;
+    square = sqrtp(p*(p-a)*(p-b)*(p-c));
+    return square;
+}
+
+
+
+int main()
+{
+    int a,b,c,s;
+    printf("Vvedite znachenia dlini storoni a: ");
+    scanf("%d", &a);
+    printf("Vvedite znachenia dlini storoni b: ");
+    scanf("%d", &b);
+    printf("Vvedite znachenia dlini storoni c: ");
+    scanf("%d", &c);
+    if (proverca(a,b,c)){
+        printf("Perimetr = %d\n", triangleP(a,b,c));
+        printf("Square = %f ", triangleSquare(a,b,c));
+    }else{
+        printf("storoni vvedini ne korrectno\n");
+    }
+
+
+
+    return 0;
+
+}
