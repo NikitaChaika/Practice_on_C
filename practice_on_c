@@ -226,3 +226,48 @@ int main()
     return 0;
 
 }
+
+
+//задание №7 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct{
+    char name[50];
+    char surname[50];
+    int birthYear;
+
+}humen;
+
+
+int main() {
+    int n;
+    printf("Vvedite kol-vo imen v fiile: ");
+    scanf(" %d", &n);
+    humen array[n];
+
+    FILE *file = fopen("input.txt", "r");
+    for(int i = 0; i<n; i++){
+        fscanf(file, "%s %s %d", array[i].name, array[i].surname, &array[i].birthYear);
+    }
+    fclose(file);
+
+    for(int i = 0; i< n - 1; i++){
+        for(int j = 0; j< n - i - 1; j++){
+            if(array[j].birthYear>array[j+1].birthYear){
+                humen temp  = array[j];
+                array[j] = array[j+1];
+                array[j+1] = temp;
+
+            }
+        }
+    }
+    for(int i = 0; i < n; i++){
+        printf("%s %s %d\n", array[i].name,  array[i].surname,  array[i].birthYear);
+    }
+
+
+    return 0;
+}
+
