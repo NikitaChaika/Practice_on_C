@@ -271,3 +271,584 @@ int main() {
     return 0;
 }
 
+
+ЭКЗАМЕН 1
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void writeMatrixToFile(int** matrix, int rows, int cols, FILE* file) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            fprintf(file, "%d ", matrix[i][j]);
+        }
+        fprintf(file, "\n");
+    }
+    fprintf(file, "\n");
+}
+
+void readMatrixFromFile(int** matrix, int rows, int cols, FILE* file) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            fscanf(file, "%d", &matrix[i][j]);
+        }
+    }
+}
+
+void multiplyMatrices(int matrix1, int matrix2, int** result, int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            result[i][j] = matrix1[i][j] * matrix2[i][j];
+        }
+    }
+}
+
+void addMatrices(int matrix1, int matrix2, int** result, int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            result[i][j] = matrix1[i][j] + matrix2[i][j];
+        }
+    }
+}
+
+int main() {
+    int rows, cols;
+    printf("Введите количество строк матрицы: ");
+    scanf("%d", &rows);
+    printf("Введите количество столбцов матрицы: ");
+    scanf("%d", &cols);
+
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock(); // Запуск таймера
+
+    // Создание и открытие файла для записи
+    FILE* file = fopen("input.txt", "w");
+    if (file == NULL) {
+        printf("Ошибка открытия файла.\n");
+        return 1;
+    }
+
+    // Создание и заполнение случайными значениями двух матриц
+    int matrix1 = (int)malloc(rows * sizeof(int*));
+    int matrix2 = (int)malloc(rows * sizeof(int*));
+    int result = (int)malloc(rows * sizeof(int*));
+    for (int i = 0; i < rows; i++) {
+        matrix1[i] = (int*)malloc(cols * sizeof(int));
+        matrix2[i] = (int*)malloc(cols * sizeof(int));
+        result[i] = (int*)malloc(cols * sizeof(int));
+        for (int j = 0; j < cols; j++) {
+            matrix1[i][j] = rand() % 10;
+            matrix2[i][j] = rand() % 10;
+        }
+    }
+
+    // Запись матриц в файл
+    writeMatrixToFile(matrix1, rows, cols, file);
+    writeMatrixToFile(matrix2, rows, cols, file);
+
+    // Закрытие файла для записи
+    fclose(file);
+
+    // Открытие файла для чтения
+    file = fopen("input.txt", "r");
+    if (file == NULL) {
+        printf("Ошибка открытия файла.\n");
+        return 1;
+    }
+
+    // Чтение матриц из файла
+    readMatrixFromFile(matrix1, rows, cols, file);
+    readMatrixFromFile(matrix2, rows, cols, file);
+
+    // Закрытие файла для чтения
+    fclose(file);
+
+    // Открытие файла для записи результата
+    file = fopen("output.txt", "w");
+    if (file == NULL) {
+        printf("Ошибка открытия файла.\n");
+        return 1;
+    }
+
+    // Выполнение операций
+    multiplyMatrices(matrix1, matrix2, result, rows, cols);
+    // Запись результата перемножения матриц в файл
+    fprintf(file, "Результат перемножения матриц:\n");
+    writeMatrixToFile(result, rows, cols, file);
+
+    addMatrices(matrix1, matrix2, result, rows, cols);
+    // Запись результата сложения матриц в файл
+    fprintf(file, "Результат сложения матриц:\n");
+    writeMatrixToFile(result, rows, cols, file);
+
+    // Закрытие файла и освобождение памяти
+    fclose(file);
+    for (int i = 0; i < rows; i++) {
+        free(matrix1[i]);
+        free(matrix2[i]);
+        free(result[i]);
+    }
+    free(matrix1);
+    free(matrix2);
+    free(result);
+
+    end = clock(); // Остановка таймера
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+    printf("Время работы программы: %f секунд\n", cpu_time_used);
+
+    return 0;
+}
+
+
+ЭКЗАМЕН 2
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void generateRandomNumbersToFile(int n) {
+    FILE *file = fopen("input.txt", "w");
+    if (file == NULL) {
+        printf("Ошибка открытия файла.\n");
+        return;
+    }
+
+    srand(time(NULL));
+
+    for (int i = 0; i < n; i++) {
+        int randomNumber = rand()%100;
+        fprintf(file, "%d\n", randomNumber);
+    }
+
+    fclose(file);
+}
+
+void replaceNumbersInFile() {
+    FILE *inputFile = fopen("input.txt", "r");
+    FILE *outputFile = fopen("output.txt", "w");
+
+    if (inputFile == NULL || outputFile == NULL) {
+        printf("Ошибка открытия файлов.\n");
+        return;
+    }
+
+    int number;
+    while (fscanf(inputFile, "%d", &number) == 1) {
+        if (number % 5 == 0 && number % 7 == 0) {
+            fprintf(outputFile, "ПЯТЬСЕМЬ ");
+        } else if (number % 5 == 0) {
+            fprintf(outputFile, "ПЯТЬ ");
+        } else if (number % 7 == 0) {
+            fprintf(outputFile, "СЕМЬ ");
+        } else {
+            fprintf(outputFile, "%d ", number);
+        }
+    }
+
+    fclose(inputFile);
+    fclose(outputFile);
+}
+
+void createMatrixFromFile(int m) {
+    clock_t start, end;
+    double cpu_time_used;
+    start = clock();
+
+    FILE *inputFile = fopen("input.txt", "r");
+
+    if (inputFile == NULL) {
+        printf("Ошибка открытия файла.\n");
+        return;
+    }
+
+    int *numbers = NULL;
+    int count = 0;
+    int number;
+
+    while (fscanf(inputFile, "%d", &number) == 1) {
+        count++;
+        numbers = realloc(numbers, count * sizeof(int));
+        numbers[count - 1] = number;
+    }
+
+    fclose(inputFile);
+
+    int n = count;
+    int rows = (n + m - 1) / m;
+    int **matrix = malloc(rows * sizeof(int*));
+
+    for (int i = 0; i < rows; i++) {
+        matrix[i] = malloc(m * sizeof(int));
+    }
+
+    int index = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < m; j++) {
+            if (index < n) {
+                matrix[i][j] = numbers[index];
+                index++;
+            } else {
+                matrix[i][j] = 0;
+            }
+        }
+    }
+
+    int *rowSums = malloc(rows * sizeof(int));
+    int *columnSums = malloc(m * sizeof(int));
+
+    for (int i = 0; i < rows; i++) {
+        rowSums[i] = 0;
+        for (int j = 0; j < m; j++) {
+            rowSums[i] += matrix[i][j];
+            columnSums[j] = 0;
+        }
+    }
+
+    for (int j = 0; j < m; j++) {
+        for (int i = 0; i < rows; i++) {
+            columnSums[j] += matrix[i][j];
+        }
+    }
+
+    printf("Матрица:\n");
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < m; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("Суммы строк: ");
+    for (int i = 0; i < rows; i++) {
+        printf("%d ", rowSums[i]);
+    }
+
+    printf("\nСуммы столбцов: ");
+    for (int j = 0; j < m; j++) {
+        printf("%d ", columnSums[j]);
+    }
+
+    printf("\nВремя выполнения: %f секунд\n", cpu_time_used);
+
+    for (int i = 0; i < rows; i++) {
+        free(matrix[i]);
+    }
+
+    free(matrix);
+    free(numbers);
+    free(rowSums);
+    free(columnSums);
+}
+
+int main() {
+    int n, m;
+    printf("Введите количество случайных чисел: ");
+    scanf("%d", &n);
+
+    generateRandomNumbersToFile(n);
+
+    replaceNumbersInFile();
+
+    printf("Введите количество столбцов матрицы: ");
+    scanf("%d", &m);
+
+    createMatrixFromFile(m);
+
+    return 0;
+}
+
+
+Задание 10 
+
+#include <stdio.h>
+
+#define MAXIMUM(a, n) ({ \
+    int i; \
+    int max = (a)[0]; \
+    for (i = 1; i < n; i++) { \
+        if ((a)[i] > max) { \
+            max = (a)[i]; \
+        } \
+    } \
+    max; \
+})
+
+int main() {
+    int size;
+    printf("Введите количество чисел: ");
+    scanf("%d", &size);
+
+    int numbers[size];
+    printf("Введите числа через пробел: ");
+    for (int i = 0; i < size; i++) {
+        scanf("%d", &numbers[i]);
+    }
+
+    int maxNumber = MAXIMUM(numbers, size);
+    printf("Максимальное число: %d\n", maxNumber);
+
+    return 0;
+}
+
+ЗАДАНИЕ 12 
+
+#include <stdio.h>
+#include <time.h>
+
+void calculateDayOfWeek(int year, int month, int day) {
+    struct tm timeinfo = {0};
+    timeinfo.tm_year = year - 1900;
+    timeinfo.tm_mon = month - 1;
+    timeinfo.tm_mday = day;
+
+    mktime(&timeinfo);
+
+    char* weekdays[] = {"Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"};
+    printf("Дата: %04d.%02d.%02d - День недели: %s\n", year, month, day, weekdays[timeinfo.tm_wday]);
+}
+
+void printCalendarForMonth(int year, int month) {
+    struct tm timeinfo = {0};
+    timeinfo.tm_year = year - 1900;
+    timeinfo.tm_mon = month - 1;
+    timeinfo.tm_mday = 1;
+
+    mktime(&timeinfo);
+
+    printf("Календарь на %04d.%02d:\n", year, month);
+
+    int daysInMonth = 31; // Максимальное количество дней в месяце
+    for (int day = 1; day <= daysInMonth; day++) {
+        timeinfo.tm_mday = day;
+        mktime(&timeinfo);
+        if (timeinfo.tm_mon + 1 != month) {
+            daysInMonth = day - 1;
+            break;
+        }
+    }
+
+    printf("Пн Вт Ср Чт Пт Сб Вс\n");
+    for (int i = 0; i < timeinfo.tm_wday; i++) {
+        printf("   ");
+    }
+    for (int day = 1; day <= daysInMonth; day++) {
+        printf("%2d ", day);
+        if ((timeinfo.tm_wday + day) % 7 == 0) {
+            printf("\n");
+        }
+    }
+    printf("\n");
+}
+
+void printCalendarForYear(int year) {
+    for (int month = 1; month <= 12; month++) {
+        printCalendarForMonth(year, month);
+        printf("\n");
+    }
+}
+
+int main() {
+    time_t now;
+    struct tm *local;
+    now = time(NULL);
+    local = localtime(&now);
+
+    char userInput[10];
+    int year, month, day;
+
+    printf("Введите дату в формате (гггг.мм.дд, гггг.мм, гггг, now): ");
+    scanf("%s", userInput);
+
+    if (strcmp(userInput, "now") == 0) {
+        printf("Текущая дата: %04d.%02d.%02d\n", local->tm_year + 1900, local->tm_mon + 1, local->tm_mday);
+    } else if (sscanf(userInput, "%d.%d.%d", &year, &month, &day) == 3) {
+        calculateDayOfWeek(year, month, day);
+    } else if (sscanf(userInput, "%d.%d", &year, &month) == 2) {
+        printCalendarForMonth(year, month);
+    } else if (sscanf(userInput, "%d", &year) == 1) {
+        printCalendarForYear(year);
+    } else {
+        printf("Неверный формат ввода.\n");
+    }
+
+    return 0;
+}
+
+ЗАДАНИЕ 13
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <unistd.h>
+
+void signalHandler(int signal) {
+    switch (signal) {
+        case SIGABRT:
+            printf("Получен сигнал SIGABRT\n");
+            break;
+        case SIGFPE:
+            printf("Получен сигнал SIGFPE\n");
+            break;
+        case SIGILL:
+            printf("Получен сигнал SIGILL\n");
+            break;
+        case SIGINT:
+            printf("Получен сигнал SIGINT\n");
+            break;
+        case SIGSEGV:
+            printf("Получен сигнал SIGSEGV\n");
+            break;
+        case SIGTERM:
+            printf("Получен сигнал SIGTERM\n");
+            break;
+        default:
+            printf("Получен неизвестный сигнал\n");
+            break;
+    }
+}
+
+int main() {
+    signal(SIGABRT, signalHandler);
+    signal(SIGFPE, signalHandler);
+    signal(SIGILL, signalHandler);
+    signal(SIGINT, signalHandler);
+    signal(SIGSEGV, signalHandler);
+    signal(SIGTERM, signalHandler);
+
+    char userInput[10];
+    printf("Введите сигнал для генерации (SIGABRT, SIGFPE, SIGILL, SIGINT, SIGSEGV, SIGTERM): ");
+    scanf("%s", userInput);
+
+    if (strcmp(userInput, "SIGABRT") == 0) {
+        raise(SIGABRT);
+    } else if (strcmp(userInput, "SIGFPE") == 0) {
+        raise(SIGFPE);
+    } else if (strcmp(userInput, "SIGILL") == 0) {
+        raise(SIGILL);
+    } else if (strcmp(userInput, "SIGINT") == 0) {
+        raise(SIGINT);
+    } else if (strcmp(userInput, "SIGSEGV") == 0) {
+        raise(SIGSEGV);
+    } else if (strcmp(userInput, "SIGTERM") == 0) {
+        raise(SIGTERM);
+    } else {
+        printf("Неверный ввод для генерации сигнала\n");
+    }
+
+    return 0;
+}
+
+ЗАДАНИЕ 14
+
+#include <stdio.h>
+#include <setjmp.h>
+
+jmp_buf buf;
+
+int fibonacci(int n) {
+    if (n <= 0) {
+        longjmp(buf, 1); 
+    }
+    if (n == 1 || n == 2) {
+        return 1;
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+int main() {
+    int n;
+    printf("Введите число для вычисления суммы чисел Фибоначчи: ");
+    scanf("%d", &n);
+
+    if (setjmp(buf) == 0) {
+        int result = fibonacci(n);
+        printf("Сумма чисел Фибоначчи до %d: %d\n", n, result);
+    } else {
+        printf("Ошибка: неверное значение для вычисления суммы чисел Фибоначчи\n");
+    }
+
+    return 0;
+}
+
+ЗАДАНИЕ 15
+
+
+#include <stdio.h>
+
+void printDigitsForward(int n) {
+    if (n == 0) {
+        return;
+    }
+    printDigitsForward(n / 10);
+    printf("%d ", n % 10);
+}
+
+void printDigitsBackward(int n) {
+    if (n == 0) {
+        return;
+    }
+    printf("%d ", n % 10);
+    printDigitsBackward(n / 10);
+}
+
+int main() {
+    int num;
+    printf("Введите натуральное число: ");
+    scanf("%d", &num);
+    
+    printf("Цифры в обычном порядке: ");
+    printDigitsForward(num);
+    
+    printf("\nЦифры в обратном порядке: ");
+    printDigitsBackward(num);
+    
+    return 0;
+}
+
+
+ЗАДАНИЕ 16
+
+
+
+#include <stdio.h>
+int countSetBitsLong(long num) {
+    int count = 0;
+    while (num) {
+        count += num & 1;
+        num >>= 1;
+    }
+    return count;
+}
+
+int countSetBitsDouble(double num) {
+    int count = 0;
+    unsigned long *ptr = (unsigned long *)&num;
+    unsigned long bits = *ptr;
+    while (bits) {
+        count += bits & 1;
+        bits >>= 1;
+    }
+    return count;
+}
+
+int main() {
+    long longNum;
+    double doubleNum;
+
+    printf("Введите значение типа long: ");
+    scanf("%ld", &longNum);
+
+    printf("Введите значение типа double: ");
+    scanf("%lf", &doubleNum);
+
+    int setBitsLong = countSetBitsLong(longNum);
+    int setBitsDouble = countSetBitsDouble(doubleNum);
+
+    printf("Количество установленных в единицу битов для числа типа long: %d\n", setBitsLong);
+    printf("Количество установленных в единицу битов для числа типа double: %d\n", setBitsDouble);
+
+    return 0;
+}
